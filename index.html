@@ -590,7 +590,7 @@ function renderLibList(){
  const q=L.q.trim().toLowerCase(),s=S.settings;
  const list=EX.filter(e=>CATS[L.c].includes(e.g)&&(!L.only||avail(e,s))&&(!q||(e.n+' '+e.g+' '+EQUIP[e.e]).toLowerCase().includes(q)));
  const tw=wById(L.target);
- const card=e=>{const inW=tw&&tw.items.some(i=>i.ex===e.id);return`<div class="card ex">${fig(AN[e.id])}<div class="row between" style="flex-wrap:nowrap;align-items:flex-start"><h3>${e.n}</h3><span class="lvl" title="${LEVELS[e.l]}">${[1,2,3].map(n=>`<i class="${n<=e.l?'on':''}"></i>`).join('')}<em>${LEVELS[e.l]}</em></span></div><div class="chips"><span class="chip">${e.g}</span><span class="chip">${EQUIP[e.e]}</span><span class="chip">${e.t==='z'?'auf Zeit':'Wiederholungen'}</span></div><p>${e.c}</p>${avail(e,s)?'':`<p class="warn">Benötigt: ${EQUIP[e.e]}</p>`}<div class="add"><button class="btn ${inW?'ghost':'line'}" id="la-${e.id}" data-act="ladd" data-ex="${e.id}" ${tw?'':'disabled'}>${inW?ic('check')+' Im Training · nochmal':ic('plus')+' Zum Training'}</button></div></div>`};
+ const card=e=>{const inW=tw&&tw.items.some(i=>i.ex===e.id);return`<div class="card ex">${fig(AN[e.id])}<div class="row between" style="flex-wrap:nowrap;align-items:flex-start"><h3>${e.n}</h3><span class="lvl" title="${LEVELS[e.l]}">${[1,2,3].map(n=>`<i class="${n<=e.l?'on':''}"></i>`).join('')}<em>${LEVELS[e.l]}</em></span></div><div class="chips"><span class="chip">${e.g}</span><span class="chip">${EQUIP[e.e]}</span><span class="chip">${e.t==='z'?'auf Zeit':'Wiederholungen'}</span></div><p>${e.c}</p>${avail(e,s)?'':`<p class="warn">Benötigt: ${EQUIP[e.e]}</p>`}<div class="add"><button class="btn ${inW?'ghost':'line'}" id="la-${e.id}" data-act="ladd" data-ex="${e.id}" ${tw?'':'disabled'}>${inW?ic('check')+' Im Training · entfernen':ic('plus')+' Zum Training'}</button></div></div>`};
  $('#libList').innerHTML=CATS[L.c].map(g=>{const it=list.filter(e=>e.g===g);return it.length?`<h2 class="ghead">${g}<span>${it.length} ${it.length===1?'Übung':'Übungen'}</span></h2>`+it.map(card).join(''):''}).join('')||'<div class="card empty" style="grid-column:1/-1">Keine Übung gefunden. Probier einen anderen Suchbegriff oder schalte „Nur mit meiner Ausrüstung“ aus.</div>';
  initDemos($('#libList'));
 }
@@ -684,7 +684,7 @@ function openPicker(wid){P={w:wid,q:'',c:'Alle',only:false};const done=()=>{P=nu
 function renderPicker(){if(!P)return;const w=wById(P.w);if(!w)return;const q=P.q.trim().toLowerCase(),s=S.settings;
  $('#pg').innerHTML=Object.keys(CATS).map((c,i)=>`<button id="pg-${i}" data-act="pg" data-v="${c}" aria-pressed="${P.c===c}">${c}</button>`).join('');
  const list=EX.filter(e=>CATS[P.c].includes(e.g)&&(!P.only||avail(e,s))&&(!q||e.n.toLowerCase().includes(q))).sort((a,b)=>(avail(b,s)?1:0)-(avail(a,s)?1:0));
- const btn=e=>{const inW=w.items.some(i=>i.ex===e.id);return`<button class="pick${inW?' in':''}" data-act="pick" data-ex="${e.id}">${s.demo?fig(AN[e.id]):''}<span><b>${e.n}</b><small>${e.g} · ${EQUIP[e.e]}${avail(e,s)?'':' · nicht vorhanden'}${inW?' · im Training':''}</small></span>${ic(inW?'check':'plus')}</button>`};
+ const btn=e=>{const inW=w.items.some(i=>i.ex===e.id);return`<button class="pick${inW?' in':''}" data-act="pick" data-ex="${e.id}">${s.demo?fig(AN[e.id]):''}<span><b>${e.n}</b><small>${e.g} · ${EQUIP[e.e]}${avail(e,s)?'':' · nicht vorhanden'}${inW?' · im Training, tippen zum Entfernen':''}</small></span>${ic(inW?'x':'plus')}</button>`};
  $('#plist').innerHTML=CATS[P.c].map(g=>{const it=list.filter(e=>e.g===g);return it.length?`<div class="ghead">${g}<span>${it.length}</span></div>`+it.map(btn).join(''):''}).join('')||'<p class="hint">Nichts gefunden.</p>';
  initDemos($('#plist'))}
 
@@ -780,9 +780,9 @@ function act(a,b){
  case'wadd':{const nw={id:uid(),name:'Neues Training',items:[]};S.plan.workouts.push(nw);save();render();openPicker(nw.id);break}
  case'addex':if(w)openPicker(w.id);break;
  case'pg':if(P){P.c=d.v;renderPicker()}break;
- case'pick':if(P){const pw=wById(P.w),e=EXM[d.ex];if(pw&&e){pw.items.push(mkItem(e,s));save();toast(`${e.n} hinzugefügt`);renderPicker()}}break;
+ case'pick':if(P){const pw=wById(P.w),e=EXM[d.ex];if(pw&&e){const k=pw.items.map(x=>x.ex).lastIndexOf(e.id);if(k>=0){const it=pw.items.splice(k,1)[0];save();renderPicker();toast(`${e.n} entfernt`,()=>{pw.items.splice(k,0,it);save();renderPicker()})}else{pw.items.push(mkItem(e,s));save();renderPicker();toast(`${e.n} hinzugefügt`)}}}break;
  case'lg':L.c=d.v;vLib();break;
- case'ladd':{const tw=wById(L.target),e=EXM[d.ex];if(tw&&e){tw.items.push(mkItem(e,s));save();renderLibList();toast(`${e.n} → ${tw.name}`,()=>{tw.items.pop();save();renderLibList()})}break}
+ case'ladd':{const tw=wById(L.target),e=EXM[d.ex];if(tw&&e){const k=tw.items.map(x=>x.ex).lastIndexOf(e.id);if(k>=0){const it=tw.items.splice(k,1)[0];save();renderLibList();toast(`${e.n} aus ${tw.name} entfernt`,()=>{tw.items.splice(k,0,it);save();renderLibList()})}else{tw.items.push(mkItem(e,s));save();renderLibList();toast(`${e.n} → ${tw.name}`,()=>{const j=tw.items.map(x=>x.ex).lastIndexOf(e.id);if(j>=0)tw.items.splice(j,1);save();renderLibList()})}}break}
  case'hmore':histN+=20;render();break;
  case'blog':{const inp=$('#bw-in');if(inp&&inp.value)logWeight(inp.value);else toast('Bitte zuerst ein Gewicht eingeben');break}
  case'bdel':{const k=S.body.findIndex(x=>x.date===+d.t);if(k>=0){const r=S.body.splice(k,1)[0];save();render();toast('Eintrag gelöscht',()=>{S.body.splice(k,0,r);save();render()})}break}
