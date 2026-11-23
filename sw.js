@@ -1,5 +1,5 @@
 // HeimKraft – Offline-Speicher für die App
-const CACHE = 'heimkraft-v1';
+const CACHE = 'heimkraft-v2';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
