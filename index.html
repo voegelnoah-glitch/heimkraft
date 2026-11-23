@@ -428,7 +428,7 @@ const RMQ=(()=>{try{return matchMedia('(prefers-reduced-motion: reduce)')}catch(
 function initDemos(root){if(!root)return;root.querySelectorAll('svg[data-demo]:not([data-ok])').forEach(svg=>{const A=ANIM[svg.dataset.demo];if(!A)return;svg.dataset.ok='1';svg.innerHTML=buildDemo(A);
  const d={svg,A,off:Math.random(),lines:[...svg.querySelectorAll('[data-b]')].map(el=>{const [a,b]=el.dataset.b.split(',');return{el,a,b}}),head:svg.querySelector('.head'),dyn:[...svg.querySelectorAll('[data-p]')].map(el=>({el,t:el.dataset.p,j:el.dataset.j,to:el.dataset.to,from:el.dataset.from?(el.dataset.from.includes(',')?el.dataset.from.split(',').map(Number):el.dataset.from):null}))};
  DEMOS.push(d);paintDemo(d,0)});
- if(!rafD&&!RMQ.matches&&DEMOS.length&&typeof requestAnimationFrame==='function')rafD=requestAnimationFrame(frameDemo)}
+ if(!rafD&&DEMOS.length&&typeof requestAnimationFrame==='function')rafD=requestAnimationFrame(frameDemo)}
 function frameDemo(ts){for(let i=DEMOS.length-1;i>=0;i--){const d=DEMOS[i];if(!d.svg.isConnected){DEMOS.splice(i,1);continue}const u=(ts/1000/d.A.d+d.off)%1;paintDemo(d,(1-Math.cos(u*2*Math.PI))/2)}rafD=DEMOS.length?requestAnimationFrame(frameDemo):0}
 function paintDemo(d,p){const K=d.A.K,n=K.length,x=p*(n-1),i=Math.min(n-2,Math.floor(x)),f=x-i,A=K[i],B=K[i+1];
  const P=k=>{if(k==='S'){const a=P('s'),b=P('s2');return[(a[0]+b[0])/2,(a[1]+b[1])/2]}if(k==='H'){const a=P('hp'),b=P('hp2');return[(a[0]+b[0])/2,(a[1]+b[1])/2]}const a=A[k],b=B[k];return[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]};
