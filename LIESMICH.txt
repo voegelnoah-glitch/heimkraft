@@ -1,0 +1,18 @@
+HeimKraft – App fürs Handy
+==========================
+
+Diese Dateien gehören zusammen: index.html, manifest.webmanifest, sw.js und die Icons.
+
+Damit sich die App installieren lässt, müssen die Dateien auf einer https-Webseite liegen,
+z. B. kostenlos über GitHub Pages:
+ 1. Auf github.com ein neues öffentliches Repository anlegen (z. B. "heimkraft").
+ 2. "Add file" > "Upload files" und alle Dateien aus diesem Ordner hochladen.
+ 3. Settings > Pages > Branch "main" / Ordner "/ (root)" > Save.
+ 4. Nach ca. 1 Minute ist die App unter https://DEINNAME.github.io/heimkraft/ erreichbar.
+
+Installieren:
+ - Android (Chrome): Seite öffnen > Menü (⋮) > "App installieren" bzw. "Zum Startbildschirm hinzufügen".
+ - iPhone (Safari): Seite öffnen > Teilen-Symbol > "Zum Home-Bildschirm".
+
+Danach startet HeimKraft wie eine normale App mit eigenem Icon, im Vollbild und auch ohne Internet.
+Deine Daten bleiben auf dem Handy. Unter Einstellungen > Daten kannst du ein Backup kopieren und laden.

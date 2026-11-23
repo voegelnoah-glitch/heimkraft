@@ -1,0 +1,16 @@
+{
+  "name": "HeimKraft Training",
+  "short_name": "HeimKraft",
+  "description": "Muskelaufbau zuhause: Trainingsplan, Timer, Übungs-Animationen und Fortschritt.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f2ee",
+  "theme_color": "#e8401f",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
