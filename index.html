@@ -125,12 +125,19 @@ output{font:700 1.1rem "Barlow Condensed",sans-serif;white-space:nowrap}
 .srow2{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:center;padding:5px 0}
 .whead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
 .wname{font:700 1.35rem "Barlow Condensed",sans-serif!important;border-color:transparent!important;background:var(--soft)!important}
-.pitem{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:14px 0;border-top:1px solid var(--line)}
+.pitem{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name acts" "ctrl ctrl";gap:12px;align-items:center;padding:16px 0;border-top:1px solid var(--line)}
 .whead+.pitem{border-top:0}
-.pi-name{flex:1 1 200px}
-.pi-ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.pi-name{grid-area:name}
+.pi-name b{font-size:1.08rem}
+.pi-ctrl{grid-area:ctrl;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:10px;align-items:end}
+.pi-ctrl .step{display:flex;width:100%}
+.pi-ctrl .step output{flex:1}
+.pitem .acts{grid-area:acts;display:flex;align-self:start;background:var(--soft);border-radius:12px;overflow:hidden}
+.pitem .acts .ico{background:none;border-radius:0;width:44px;height:44px}
+.pitem .acts .ico.del{color:#e5484d;border-left:1.5px solid var(--line)}
+@media(min-width:900px){.pitem{grid-template-columns:minmax(0,1fr) minmax(0,440px) auto;grid-template-areas:"name ctrl acts"}.pitem .acts{align-self:end}}
 .lab{display:block;font-size:.82rem;color:var(--mut);margin-bottom:3px;font-weight:600}
-.win{width:96px!important}
+.win{width:100%!important}
 .acts{display:flex;gap:6px}
 /* Übungen */
 .filters{display:grid;gap:12px;margin-bottom:18px}
@@ -564,11 +571,11 @@ function vPlan(){
 function wcard(w){return`<div class="card"><div class="whead"><input type="text" id="wn-${w.id}" class="wname" value="${esc(w.name)}" data-f="wname" data-w="${w.id}" aria-label="Name des Trainings" maxlength="40"><span class="chip">ca. ${estMin(w)} Min</span><button class="ico" id="wd-${w.id}" data-act="wdel" data-w="${w.id}" aria-label="Training löschen">${ic('trash')}</button></div>
  ${w.items.map((it,i)=>pitem(w,it,i)).join('')||'<p class="hint" style="padding:10px 0">Noch keine Übungen.</p>'}
  <div class="row" style="margin-top:14px"><button class="btn ghost" id="ax-${w.id}" data-act="addex" data-w="${w.id}">${ic('plus')} Übung hinzufügen</button>${w.items.length?`<button class="btn line" id="sw-${w.id}" data-act="start" data-w="${w.id}">${ic('play')} Starten</button>`:''}</div></div>`}
-function pitem(w,it,i){const e=EXM[it.ex],z=e.t==='z',id=`${w.id}-${i}`,u=S.settings.unit;return`<div class="pitem"><div class="pi-name"><b>${e.n}</b><div class="meta">${e.g} · ${EQUIP[e.e]}</div></div><div class="pi-ctrl">
+function pitem(w,it,i){const e=EXM[it.ex],z=e.t==='z',id=`${w.id}-${i}`,u=S.settings.unit;return`<div class="pitem"><div class="pi-name"><b>${e.n}</b><div class="meta">${e.g} · ${EQUIP[e.e]}</div></div><div class="acts"><button class="ico" id="up-${id}" data-act="up" data-w="${w.id}" data-i="${i}" aria-label="Nach oben" ${i===0?'disabled':''}>${ic('up')}</button><button class="ico" id="dn-${id}" data-act="down" data-w="${w.id}" data-i="${i}" aria-label="Nach unten" ${i===w.items.length-1?'disabled':''}>${ic('down')}</button><button class="ico del" id="dl-${id}" data-act="del" data-w="${w.id}" data-i="${i}" aria-label="${e.n} entfernen">${ic('trash')}</button></div><div class="pi-ctrl">
  <div><span class="lab">Sätze</span>${stepper(w.id,i,'sets',it.sets)}</div>
  <div><span class="lab">${z?'Sekunden':'Wiederholungen'}</span>${stepper(w.id,i,z?'sec':'reps',z?it.sec:it.reps)}</div>
  ${hasW(e)?`<div><label class="lab" for="wt-${id}">Zusatzgewicht (${u})</label><input type="number" class="win" id="wt-${id}" min="0" step="0.5" inputmode="decimal" value="${it.w||''}" placeholder="0" data-f="w" data-w="${w.id}" data-i="${i}"></div>`:''}
- <div class="acts"><button class="ico" id="up-${id}" data-act="up" data-w="${w.id}" data-i="${i}" aria-label="Nach oben" ${i===0?'disabled':''}>${ic('up')}</button><button class="ico" id="dn-${id}" data-act="down" data-w="${w.id}" data-i="${i}" aria-label="Nach unten" ${i===w.items.length-1?'disabled':''}>${ic('down')}</button><button class="ico" id="dl-${id}" data-act="del" data-w="${w.id}" data-i="${i}" aria-label="${e.n} entfernen">${ic('trash')}</button></div></div></div>`}
+</div></div>`}
 
 function vLib(){
  if(!wById(L.target))L.target=S.plan.workouts[0]?S.plan.workouts[0].id:'';
